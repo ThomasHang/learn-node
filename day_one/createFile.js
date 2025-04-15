@@ -11,7 +11,13 @@ if (args.length < 2) {
 const filePath = path.join(__dirname, args[0]);
 
 // 写入文件（异步）
-fs.writeFile(filePath, args[1], (err) => {
+fs.appendFile(filePath, args[1], (err) => {
   if (err) return console.error(err);
   console.log("写入成功");
+});
+
+
+fs.readFile(filePath, "utf-8", (err, data) => {
+  if (err) return console.error(err);
+  console.log("文件内容：", data);
 });
