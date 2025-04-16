@@ -1,14 +1,14 @@
 {
-  "name": "day_five",
+  "name": "th-serve",
   "version": "1.0.0",
-  "main": "server-advance.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "author": "trent",
+  "license": "MIT",
+  "description": "基于 Node.js 的简洁静态资源服务器",
   "dependencies": {
     "minimist": "^1.2.8"
   },

@@ -11,6 +11,8 @@ const mimeTypes = {
   ".jpg": "image/jpeg",
   ".png": "image/png",
   ".txt": "text/plain",
+  ".video": "video/mp4",
+  ".mp3": "audio/mpeg",
 };
 
 function getMimeType(filePath) {
