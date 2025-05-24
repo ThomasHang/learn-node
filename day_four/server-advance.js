@@ -1,25 +1,24 @@
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
 
-
-
-// MIME 类型映射表 
+// MIME 类型映射表
 const mimeTypes = {
-  '.html': 'text/html; charset=utf-8',
-  '.css': 'text/css',
-  '.js': 'application/javascript',
-  '.json': 'application/json',
-  '.jpg': 'image/jpeg',
-  '.png': 'image/png',
-  '.txt': 'text/plain',
+  ".html": "text/html; charset=utf-8",
+  ".css": "text/css",
+  ".js": "application/javascript",
+  ".json": "application/json",
+  ".jpg": "image/jpeg",
+  ".png": "image/png",
+  ".txt": "text/plain",
+  ".pdf": "application/pdf",
   // 可扩展更多类型
-};  
+};
 
 // 获取 MIME 类型函数
 function getMimeType(filePath) {
   const ext = path.extname(filePath).toLowerCase();
-  return mimeTypes[ext] || 'text/plain'; // 没找到就默认 text/plain
+  return mimeTypes[ext] || "text/plain"; // 没找到就默认 text/plain
 }
 
 // 创建服务器
@@ -28,8 +27,8 @@ const server = http.createServer((req, res) => {
   let reqPath = req.url;
 
   // 默认访问根目录返回 index.html
-  if (reqPath === '/') {
-    reqPath = '/index.html';
+  if (reqPath === "/") {
+    reqPath = "/index.html";
   }
 
   // 构造文件真实路径
@@ -40,19 +39,27 @@ const server = http.createServer((req, res) => {
     if (err) {
       // 文件不存在，返回 404
       res.statusCode = 404;
-      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-      res.end('404 Not Found：文件不存在');
+      res.setHeader("Content-Type", "text/plain; charset=utf-8");
+      res.end("404 Not Found：文件不存在");
       return;
     }
 
+
     // 文件存在，设置类型并返回
     res.statusCode = 200;
-    res.setHeader('Content-Type', getMimeType(filePath));
+    res.setHeader("Content-Type", getMimeType(filePath));
+
+     // 特别处理中文文件名（关键！）
+     if (/[\u4e00-\u9fa5]/.test(path.basename(filePath))) { // 检测是否含中文
+      const encodedFilename = encodeURIComponent(path.basename(filePath)); // 编码中文部分
+      res.setHeader('Content-Disposition', `inline; filename*=UTF-8''${encodedFilename}`);
+    }
+
     fs.createReadStream(filePath).pipe(res);
   });
 });
 
 // 启动服务
 server.listen(3000, () => {
-  console.log('🚀 静态服务器启动成功：http://localhost:3000');
+  console.log("🚀 静态服务器启动成功：http://localhost:3000");
 });
